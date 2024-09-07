@@ -142,7 +142,7 @@ pub fn deg2dms(deg: f64) -> String {
 /// let ra2 = 46.0;
 /// let dec2 = 46.0;
 /// let distance = great_circle_distance(ra1, dec1, ra2, dec2);
-/// assert_eq!(distance, 1.221153650840359);
+/// assert_eq!((distance - 1.221153650840359).abs() < 1e-6, true);
 /// println!("{}", distance);
 /// ```
 pub fn great_circle_distance(ra1_deg: f64, dec1_deg: f64, ra2_deg: f64, dec2_deg: f64) -> f64 {

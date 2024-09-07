@@ -168,7 +168,7 @@ impl Target {
     /// 
     /// let target1 = Target::new(6.374817, 20.242942, None);
     /// let target2 = Target::new(6.374817, 21.242942, None);
-    /// assert_eq!(target1.separation(&target2), 1.0000000000000036);
+    /// assert_eq!((target1.separation(&target2) - 1.0).abs() < 1e-6, true);
     /// ```
     pub fn separation(&self, other: &Target) -> f64 {
         great_circle_distance(self.ra, self.dec, other.ra, other.dec)
@@ -196,7 +196,10 @@ impl Target {
     /// let others = vec![target1, target2, target3];
     /// 
     /// let separations = target.separations(&others);
-    /// assert_eq!(separations, vec![1.0000000000000036, 1.9999999999999971, 3.0000000000000018]);
+    /// assert_eq!(separations.len(), 3);
+    /// assert_eq!((separations[0] - 1.0).abs() < 1e-6, true);
+    /// assert_eq!((separations[1] - 2.0).abs() < 1e-6, true);
+    /// assert_eq!((separations[2] - 3.0).abs() < 1e-6, true);
     /// ```
     pub fn separations(&self, others: &Vec<Target>) -> Vec<f64> {
         let mut separations = Vec::new();
