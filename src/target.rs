@@ -1,5 +1,5 @@
 use crate::observer::Observer;
-use crate::spatial::{DEGRA, great_circle_distance};
+use crate::spatial::{DEGRA, great_circle_distance, radec2lb, deg2dms, deg2hms};
 use crate::time::Time;
 
 /// Target struct
@@ -20,6 +20,8 @@ use crate::time::Time;
 /// * `separation` - Calculate the separation to another target
 /// * `separations` - Calculate the separations to a list of other targets
 /// * `to_string` - Convert the target to a string
+/// * `radec2hmsdms` - Convert the target to a tuple of strings with RA and DEC in HMS and DMS format
+/// * `radec2lb` - Compute the Galactic coordinates of the target
 /// 
 /// # Examples
 /// 
@@ -238,4 +240,47 @@ impl Target {
         }
         format!("RA: {}, DEC: {} (no name)", self.ra, self.dec)
     }
+
+    /// Convert the target to a tuple of strings with RA and DEC in HMS and DMS format
+    /// 
+    /// # Returns
+    /// 
+    /// * (`String`, `String`) - The target as a string with RA and DEC in HMS and DMS format
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use boom_core::Target;
+    /// 
+    /// let target = Target::new(6.374817, 20.242942, Some("Vega".to_string()));
+    /// let (hms, dms) = target.radec2hmsdms();
+    /// assert_eq!(hms, "00:25:29.9561");
+    /// assert_eq!(dms, "20:14:34.591");
+    /// println!("RA: {}, DEC: {}", hms, dms);
+    /// ```
+    pub fn radec2hmsdms(&self) -> (String, String) {
+        (deg2hms(self.ra), deg2dms(self.dec))
+    }
+
+    /// Compute the Galactic coordinates of the target
+    /// 
+    /// # Returns
+    /// 
+    /// * (`f64`, `f64`) - The Galactic longitude and latitude of the target in degrees
+    /// 
+    /// # Examples
+    /// 
+    /// ```
+    /// use boom_core::Target;
+    /// 
+    /// let target = Target::new(6.374817, 20.242942, Some("Vega".to_string()));
+    /// let (l, b) = target.radec2lb();
+    /// assert_eq!((l - 114.706509).abs() < 1e-6, true);
+    /// assert_eq!((b + 42.214159).abs() < 1e-6, true);
+    /// println!("Galactic L: {}, Galactic B: {}", l, b);
+    /// ```
+    pub fn radec2lb(&self) -> (f64, f64) {
+        radec2lb(self.ra, self.dec)
+    }
+
 }

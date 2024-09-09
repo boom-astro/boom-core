@@ -17,14 +17,14 @@ use chrono::{DateTime, Datelike, Timelike, Utc, TimeZone};
 /// 
 /// * `new` - Create a new Time
 /// * `now` - Get the current time
-/// * `from_utc` - Create a new Time from a DateTime<Utc>
+/// * `from_utc` - Create a new Time from a `DateTime<Utc>`
 /// * `from_isot_str` - Create a new Time from an ISO 8601 string
 /// * `from_jd` - Create a new Time from a Julian Date
 /// * `from_mjd` - Create a new Time from a Modified Julian Date
 /// * `to_jd` - Convert the Time to a Julian Date
 /// * `to_mjd` - Convert the Time to a Modified Julian Date
 /// * `to_gst` - Convert the Time to a Greenwich Sidereal Time
-/// * `to_utc` - Convert the Time to a DateTime<Utc>
+/// * `to_utc` - Convert the Time to a `DateTime<Utc>`
 /// * `to_string` - Convert the Time to a string
 /// 
 /// # Examples
@@ -115,11 +115,11 @@ impl Time {
         }
     }
 
-    /// Create a new Time from a DateTime<Utc>
+    /// Create a new Time from a `DateTime<Utc>`
     /// 
     /// # Arguments
     /// 
-    /// * `utc` - DateTime<Utc> object
+    /// * `utc` - `DateTime<Utc>` object
     /// 
     /// # Returns
     /// 
@@ -348,11 +348,11 @@ impl Time {
         gst % 360.0
     }
 
-    /// Convert the Time to a DateTime<Utc>
+    /// Convert the Time to a `DateTime<Utc>`
     /// 
     /// # Returns
     /// 
-    /// * `DateTime<Utc>` - DateTime<Utc> object
+    /// * `DateTime<Utc>` - `DateTime<Utc>` object
     /// 
     /// # Examples
     /// 

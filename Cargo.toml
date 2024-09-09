@@ -2,6 +2,11 @@
 name = "boom-core"
 version = "0.1.0"
 edition = "2021"
+authors = ["Theophile du Laz"]
+description = "A lightweight library to perform basic astronomical calculations, inspired by Python's Astropy syntax."
+license = "MIT"
+repository = "https://github.com/boom-astro/boom-core"
+keywords = ["astronomy", "astrophysics", "celestial mechanics", "ephemerides", "time", "coordinates", "astro-informatics", "physics", "science"]
 
 [dependencies]
 chrono = "0.4.38"
