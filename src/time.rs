@@ -429,12 +429,6 @@ impl Time {
             return self.to_utc().to_string();
         }
     }
-
-    pub fn add_seconds(&self, seconds: i64) -> Time {
-        // for that convert to jd, add seconds, convert back to time
-        let jd = self.to_jd() + (seconds as f64) / 86400.0;
-        Time::from_jd(jd)
-    }
 }
 
 impl fmt::Display for Time {
