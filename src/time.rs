@@ -1,3 +1,4 @@
+use std::fmt;
 use chrono::{DateTime, Datelike, Timelike, Utc, TimeZone};
 
 /// Time struct
@@ -40,6 +41,7 @@ use chrono::{DateTime, Datelike, Timelike, Utc, TimeZone};
 /// assert!(date.minute == 0);
 /// assert!(date.second == 0);
 /// ```
+#[derive(Debug, Clone)]
 pub struct Time {
     pub year: i32,
     pub month: u32,
@@ -202,49 +204,47 @@ impl Time {
     /// ```
     /// use boom_core::Time;
     /// 
-    /// let jd = 2458849.5;
+    /// let jd = 2460564.0569609753;
     /// let date = Time::from_jd(jd);
-    /// assert!(date.year == 2020);
-    /// assert!(date.month == 1);
-    /// assert!(date.day == 1);
-    /// assert!(date.hour == 0);
-    /// assert!(date.minute == 0);
-    /// assert!(date.second == 0);
+    /// println!("{:?}", date);
+    /// assert!(date.year == 2024);
+    /// assert!(date.month == 9);
+    /// assert!(date.day == 10);
+    /// assert!(date.hour == 13);
+    /// assert!(date.minute == 22);
+    /// assert!(date.second == 1);
     /// ```
     pub fn from_jd(jd: f64) -> Time {
-        let z = jd + 0.5;
-        let f = z.fract();
-        let a = if z < 2299161.0 {
-            z
-        } else {
-            let alpha = ((z - 1867216.25) / 36524.25).floor();
-            z + 1.0 + alpha - (alpha / 4.0).floor()
-        };
-        let b = a + 1524.0;
-        let c = ((b - 122.1) / 365.25).floor();
-        let d = (365.25 * c).floor();
-        let e = ((b - d) / 30.6001).floor();
-        let day = (b - d - (30.6001 * e).floor() + f).floor();
-        let month = if e < 14.0 {
-            e - 1.0
-        } else {
-            e - 13.0
-        };
-        let year = if month > 2.0 {
-            c - 4716.0
-        } else {
-            c - 4715.0
-        };
-        let hour = ((f * 24.0).floor() as u32) % 24;
-        let minute = ((f * 1440.0).floor() as u32) % 60;
-        let second = ((f * 86400.0).floor() as u32) % 60;
+        let temp = jd + 0.5;
+        let z = temp.floor() as i32;
+        let mut f = temp - z as f64;
+        let mut a = z;
+        if z > 2299161 {
+            let alpha = ((z as f64 - 1867216.25) / 36524.25).floor() as i32;
+            a = z + 1 + alpha - (alpha / 4);
+        }
+        let b = a + 1524;
+        let c = ((b as f64 - 122.1) / 365.25).floor();
+        let d = (365.25 * c) as i32;
+        let e = ((b as f64 - d as f64) / 30.6001).floor() as i32;
+
+        let day = b - d - ((30.6001 * e as f64) as i32) + f as i32;
+        let month = if e < 14 { e - 1 } else { e - 13 };
+        let year = if month > 2 { c - 4716.0 } else { c - 4715.0 };
+
+        let hour = ((f * 24.0) as i32).abs();
+        f = f - (hour as f64 / 24.0);
+        let minute = ((f * 1440.0) as i32).abs();
+        f = f - (minute as f64 / 1440.0);
+        let second = ((f * 86400.0) as i32).abs();
+
         Time {
             year: year as i32,
             month: month as u32,
             day: day as u32,
-            hour,
-            minute,
-            second,
+            hour: hour as u32,
+            minute: minute as u32,
+            second: second as u32,
         }
     }
 
@@ -428,5 +428,17 @@ impl Time {
         } else {
             return self.to_utc().to_string();
         }
+    }
+
+    pub fn add_seconds(&self, seconds: i64) -> Time {
+        // for that convert to jd, add seconds, convert back to time
+        let jd = self.to_jd() + (seconds as f64) / 86400.0;
+        Time::from_jd(jd)
+    }
+}
+
+impl fmt::Display for Time {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}-{:02}-{:02} {:02}:{:02}:{:02}", self.year, self.month, self.day, self.hour, self.minute, self.second)
     }
 }
