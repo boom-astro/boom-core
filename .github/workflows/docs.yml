@@ -29,6 +29,8 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Clean docs folder
         run: cargo clean --doc
+      - name: Remove previous index.html
+        run: rm target/doc/index.html
       - name: Build docs
         run: cargo doc --no-deps
       - name: Add redirect
