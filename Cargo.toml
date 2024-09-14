@@ -1,12 +1,12 @@
 [package]
-name = "boom-core"
+name = "flare"
 version = "0.1.0"
 edition = "2021"
 authors = ["Theophile du Laz"]
 description = "A lightweight library to perform basic astronomical calculations, inspired by Python's Astropy syntax."
 license = "MIT"
-repository = "https://github.com/boom-astro/boom-core"
+repository = "https://github.com/boom-astro/flare"
 keywords = ["astronomy", "astrophysics", "celestial mechanics", "ephemerides", "time", "coordinates", "astro-informatics", "physics", "science"]
 
 [dependencies]
-chrono = "0.4.38"
+chrono = ">=0.4.0"

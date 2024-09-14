@@ -23,7 +23,7 @@ use crate::time::Time;
 /// # Examples
 /// 
 /// ```
-/// use boom_core::{Observer, Target, Time};
+/// use flare::{Observer, Target, Time};
 /// 
 /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, Some("P48".to_string()));
 /// let time = Time::new(2024, 8, 24, 6, 35, 34);
@@ -56,7 +56,7 @@ impl Observer {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Observer;
+    /// use flare::Observer;
     /// 
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, Some("P48".to_string()));
     /// assert_eq!(observer.lat, 33.3633675);
@@ -67,7 +67,7 @@ impl Observer {
     /// ```
     /// 
     /// ```
-    /// use boom_core::Observer;
+    /// use flare::Observer;
     /// 
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
     /// assert_eq!(observer.lat, 33.3633675);
@@ -93,7 +93,7 @@ impl Observer {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::{Observer, Time};
+    /// use flare::{Observer, Time};
     /// 
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
     /// let time = Time::new(2024, 8, 24, 6, 35, 34);
@@ -122,7 +122,7 @@ impl Observer {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::{Observer, Target, Time};
+    /// use flare::{Observer, Target, Time};
     /// 
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
     /// let target1 = Target::new(6.374817, 20.242942, None);
@@ -183,7 +183,7 @@ impl Observer {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Observer;
+    /// use flare::Observer;
     /// 
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, Some("P48".to_string()));
     /// assert_eq!(observer.to_string(), "Name: P48, Lat: 33.3633675, Lon: -116.8361345, Elevation: 1870");
@@ -191,7 +191,7 @@ impl Observer {
     /// ```
     /// 
     /// ```
-    /// use boom_core::Observer;
+    /// use flare::Observer;
     /// 
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
     /// assert_eq!(observer.to_string(), "Lat: 33.3633675, Lon: -116.8361345, Elevation: 1870 (no name)");
@@ -218,7 +218,7 @@ impl Observer {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::{Observer, Time};
+    /// use flare::{Observer, Time};
     /// 
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
     /// let time = Time::new(2024, 9, 10, 3, 0, 0);
@@ -230,7 +230,7 @@ impl Observer {
     /// ```
     /// 
     /// ```
-    /// use boom_core::{Observer, Time};
+    /// use flare::{Observer, Time};
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
     /// let time = Time::new(2024, 9, 10, 3, 0, 0);
     /// let sun_alt_astronomical = -18.0;
@@ -309,11 +309,11 @@ impl Observer {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::{Observer, Time};
+    /// use flare::{Observer, Time};
     /// 
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
     /// let time = Time::new(2024, 9, 10, 3, 0, 0);
-    /// let (sunrise, sunset) = observer.sun_set_time_astronomical(Some(&time));
+    /// let (sunrise, sunset) = observer.twilight_astronomical(Some(&time));
     /// println!("Next sunrise: {}", sunrise.to_string(None));
     /// println!("Next sunset: {}", sunset.to_string(None));
     /// assert_eq!(sunrise.to_string(None), "2024-09-10 11:57:23 UTC");
@@ -324,7 +324,7 @@ impl Observer {
     /// 
     /// Sunrise & sunset astronomical times are defined as the time when the sun is 18 degrees below the horizon.
     /// This is the time when the sky is dark enough for most astronomical observations.
-    pub fn sun_set_time_astronomical(&self, after: Option<&Time>) -> (Time, Time) {
+    pub fn twilight_astronomical(&self, after: Option<&Time>) -> (Time, Time) {
         self.sun_set_time(after, Some(-18.0))
     }
 
@@ -341,11 +341,11 @@ impl Observer {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::{Observer, Time};
+    /// use flare::{Observer, Time};
     /// 
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
     /// let time = Time::new(2024, 9, 10, 3, 0, 0);
-    /// let (sunrise, sunset) = observer.sun_set_time_nautical(Some(&time));
+    /// let (sunrise, sunset) = observer.twilight_nautical(Some(&time));
     /// println!("Next sunrise: {}", sunrise.to_string(None));
     /// println!("Next sunset: {}", sunset.to_string(None));
     /// assert_eq!(sunrise.to_string(None), "2024-09-10 12:27:29 UTC");
@@ -356,7 +356,7 @@ impl Observer {
     /// 
     /// Sunrise & sunset nautical times are defined as the time when the sun is 12 degrees below the horizon.
     /// This is the time when the horizon is still visible at sea.
-    pub fn sun_set_time_nautical(&self, after: Option<&Time>) -> (Time, Time) {
+    pub fn twilight_nautical(&self, after: Option<&Time>) -> (Time, Time) {
         self.sun_set_time(after, Some(-12.0))
     }
 
@@ -373,11 +373,11 @@ impl Observer {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::{Observer, Time};
+    /// use flare::{Observer, Time};
     /// 
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
     /// let time = Time::new(2024, 9, 10, 3, 0, 0);
-    /// let (sunrise, sunset) = observer.sun_set_time_civil(Some(&time));
+    /// let (sunrise, sunset) = observer.twilight_civil(Some(&time));
     /// println!("Next sunrise: {}", sunrise.to_string(None));
     /// println!("Next sunset: {}", sunset.to_string(None));
     /// assert_eq!(sunrise.to_string(None), "2024-09-10 12:56:58 UTC");
@@ -388,7 +388,17 @@ impl Observer {
     /// 
     /// Sunrise & sunset civil times are defined as the time when the sun is 6 degrees below the horizon.
     /// This is the time when the sky is light enough for most outdoor activities.
-    pub fn sun_set_time_civil(&self, after: Option<&Time>) -> (Time, Time) {
+    pub fn twilight_civil(&self, after: Option<&Time>) -> (Time, Time) {
         self.sun_set_time(after, Some(-6.0))
+    }
+}
+
+impl std::fmt::Display for Observer {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        if let Some(name) = &self.name {
+            write!(f, "Name: {}, Lat: {}, Lon: {}, Elevation: {}", name, self.lat, self.lon, self.elevation)
+        } else {
+            write!(f, "Lat: {}, Lon: {}, Elevation: {} (no name)", self.lat, self.lon, self.elevation)
+        }
     }
 }

@@ -26,7 +26,7 @@ use crate::time::Time;
 /// # Examples
 /// 
 /// ```
-/// use boom_core::Target;
+/// use flare::Target;
 /// 
 /// let target = Target::new(6.374817, 20.242942, Some("Vega".to_string()));
 /// println!("{}", target.to_string());
@@ -53,7 +53,7 @@ impl Target {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Target;
+    /// use flare::Target;
     /// 
     /// let target = Target::new(6.374817, 20.242942, Some("Vega".to_string()));
     /// assert_eq!(target.ra, 6.374817);
@@ -63,7 +63,7 @@ impl Target {
     /// ```
     /// 
     /// ```
-    /// use boom_core::Target;
+    /// use flare::Target;
     /// 
     /// let target = Target::new(6.374817, 20.242942, None);
     /// assert_eq!(target.ra, 6.374817);
@@ -89,7 +89,7 @@ impl Target {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::{Observer, Target, Time};
+    /// use flare::{Observer, Target, Time};
     /// 
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
     /// let target = Target::new(6.374817, 20.242942, None);
@@ -129,7 +129,7 @@ impl Target {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::{Observer, Target, Time};
+    /// use flare::{Observer, Target, Time};
     /// 
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
     /// let target = Target::new(6.374817, 20.242942, None);
@@ -166,7 +166,7 @@ impl Target {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Target;
+    /// use flare::Target;
     /// 
     /// let target1 = Target::new(6.374817, 20.242942, None);
     /// let target2 = Target::new(6.374817, 21.242942, None);
@@ -189,7 +189,7 @@ impl Target {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Target;
+    /// use flare::Target;
     /// 
     /// let target = Target::new(6.374817, 20.242942, None);
     /// let target1 = Target::new(6.374817, 21.242942, None);
@@ -220,7 +220,7 @@ impl Target {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Target;
+    /// use flare::Target;
     /// 
     /// let target = Target::new(6.374817, 20.242942, Some("Vega".to_string()));
     /// assert_eq!(target.to_string(), "Name: Vega, RA: 6.374817, DEC: 20.242942");
@@ -228,7 +228,7 @@ impl Target {
     /// ```
     /// 
     /// ```
-    /// use boom_core::Target;
+    /// use flare::Target;
     /// 
     /// let target = Target::new(6.374817, 20.242942, None);
     /// assert_eq!(target.to_string(), "RA: 6.374817, DEC: 20.242942 (no name)");
@@ -250,7 +250,7 @@ impl Target {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Target;
+    /// use flare::Target;
     /// 
     /// let target = Target::new(6.374817, 20.242942, Some("Vega".to_string()));
     /// let (hms, dms) = target.radec2hmsdms();
@@ -271,7 +271,7 @@ impl Target {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Target;
+    /// use flare::Target;
     /// 
     /// let target = Target::new(6.374817, 20.242942, Some("Vega".to_string()));
     /// let (l, b) = target.radec2lb();
@@ -283,4 +283,14 @@ impl Target {
         radec2lb(self.ra, self.dec)
     }
 
+}
+
+impl std::fmt::Display for Target {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        if let Some(name) = &self.name {
+            write!(f, "Name: {}, RA: {}, DEC: {}", name, self.ra, self.dec)
+        } else {
+            write!(f, "RA: {}, DEC: {} (no name)", self.ra, self.dec)
+        }
+    }
 }

@@ -5,7 +5,7 @@ pub mod target;
 pub mod cosmo;
 pub mod phot;
 
-pub use cosmo::Plank18;
+pub use cosmo::Cosmo;
 pub use observer::Observer;
 pub use target::Target;
 pub use time::Time;

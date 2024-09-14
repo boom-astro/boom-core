@@ -20,7 +20,7 @@ const RGE: [[f64; 3]; 3] = [
 /// # Examples
 /// 
 /// ```
-/// use boom_core::spatial::radec2lb;
+/// use flare::spatial::radec2lb;
 /// 
 /// let ra = 45.0;
 /// let dec = 45.0;
@@ -64,7 +64,7 @@ pub fn radec2lb(ra: f64, dec: f64) -> (f64, f64) {
 /// # Examples
 /// 
 /// ```
-/// use boom_core::spatial::deg2hms;
+/// use flare::spatial::deg2hms;
 /// 
 /// let deg = 45.0;
 /// let hms = deg2hms(deg);
@@ -98,7 +98,7 @@ pub fn deg2hms(deg: f64) -> String {
 /// # Examples
 /// 
 /// ```
-/// use boom_core::spatial::deg2dms;
+/// use flare::spatial::deg2dms;
 /// 
 /// let deg = 45.0;
 /// let dms = deg2dms(deg);
@@ -135,7 +135,7 @@ pub fn deg2dms(deg: f64) -> String {
 /// # Examples
 /// 
 /// ```
-/// use boom_core::spatial::great_circle_distance;
+/// use flare::spatial::great_circle_distance;
 /// 
 /// let ra1 = 45.0;
 /// let dec1 = 45.0;
@@ -178,7 +178,7 @@ pub fn great_circle_distance(ra1_deg: f64, dec1_deg: f64, ra2_deg: f64, dec2_deg
 /// # Examples
 /// 
 /// ```
-/// use boom_core::spatial::in_ellipse;
+/// use flare::spatial::in_ellipse;
 /// 
 /// let alpha = 45.0;
 /// let delta0 = 45.0;

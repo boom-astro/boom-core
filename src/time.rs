@@ -1,4 +1,3 @@
-use std::fmt;
 use chrono::{DateTime, Datelike, Timelike, Utc, TimeZone};
 
 /// Time struct
@@ -31,7 +30,7 @@ use chrono::{DateTime, Datelike, Timelike, Utc, TimeZone};
 /// # Examples
 /// 
 /// ```
-/// use boom_core::Time;
+/// use flare::Time;
 /// 
 /// let date = Time::new(2020, 1, 1, 0, 0, 0);
 /// assert!(date.year == 2020);
@@ -70,7 +69,7 @@ impl Time {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Time;
+    /// use flare::Time;
     /// 
     /// let date = Time::new(2020, 1, 1, 0, 0, 0);
     /// assert!(date.year == 2020);
@@ -100,7 +99,7 @@ impl Time {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Time;
+    /// use flare::Time;
     /// 
     /// let date = Time::now();
     /// assert!(date.year > 2023);
@@ -131,7 +130,7 @@ impl Time {
     /// 
     /// ```
     /// use chrono::{DateTime, Datelike, Timelike, Utc, TimeZone};
-    /// use boom_core::Time;
+    /// use flare::Time;
     /// 
     /// let utc = Utc.with_ymd_and_hms(2020, 1, 1, 0, 0, 0).unwrap();
     /// let date = Time::from_utc(utc);
@@ -166,7 +165,7 @@ impl Time {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Time;
+    /// use flare::Time;
     /// 
     /// let isot = "2020-01-01T00:00:00Z";
     /// let date = Time::from_isot_str(isot);
@@ -202,7 +201,7 @@ impl Time {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Time;
+    /// use flare::Time;
     /// 
     /// let jd = 2460564.0569609753;
     /// let date = Time::from_jd(jd);
@@ -261,7 +260,7 @@ impl Time {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Time;
+    /// use flare::Time;
     /// 
     /// let mjd = 58849.0;
     /// let date = Time::from_mjd(mjd);
@@ -285,7 +284,7 @@ impl Time {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Time;
+    /// use flare::Time;
     /// 
     /// let date = Time::new(2024, 8, 24, 6, 35, 34);
     /// let jd = date.to_jd();
@@ -314,7 +313,7 @@ impl Time {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Time;
+    /// use flare::Time;
     /// 
     /// let date = Time::new(2024, 8, 24, 6, 35, 34);
     /// let mjd = date.to_mjd();
@@ -333,7 +332,7 @@ impl Time {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Time;
+    /// use flare::Time;
     /// 
     /// let date = Time::new(2024, 8, 24, 6, 35, 34);
     /// let gst = date.to_gst();
@@ -357,7 +356,7 @@ impl Time {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Time;
+    /// use flare::Time;
     /// use chrono::{DateTime, Utc};
     /// 
     /// let date = Time::new(2024, 8, 24, 6, 35, 34);
@@ -389,7 +388,7 @@ impl Time {
     /// # Examples
     /// 
     /// ```
-    /// use boom_core::Time;
+    /// use flare::Time;
     /// 
     /// let date = Time::new(2020, 1, 1, 0, 0, 0);
     /// let jd_str = date.to_string(Some("jd"));
@@ -406,7 +405,7 @@ impl Time {
     /// ```
     /// 
     /// ```
-    /// use boom_core::Time;
+    /// use flare::Time;
     /// 
     /// let date = Time::new(2020, 1, 1, 0, 0, 0);
     /// let str = date.to_string(None);
@@ -431,8 +430,8 @@ impl Time {
     }
 }
 
-impl fmt::Display for Time {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl std::fmt::Display for Time {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}-{:02}-{:02} {:02}:{:02}:{:02}", self.year, self.month, self.day, self.hour, self.minute, self.second)
     }
 }
