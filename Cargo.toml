@@ -6,7 +6,7 @@ authors = ["Theophile du Laz"]
 description = "A lightweight library to perform basic astronomical calculations, inspired by Python's Astropy syntax."
 license = "MIT"
 repository = "https://github.com/boom-astro/flare"
-keywords = ["astronomy", "astrophysics", "celestial mechanics", "ephemerides", "time", "coordinates", "astro-informatics", "physics", "science"]
+keywords = ["astronomy", "astrophysics", "ephemerides", "time", "coordinates"]
 
 [dependencies]
 chrono = ">=0.4.0"
