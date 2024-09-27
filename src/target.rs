@@ -1,6 +1,7 @@
 use crate::observer::Observer;
 use crate::spatial::{DEGRA, great_circle_distance, radec2lb, deg2dms, deg2hms};
 use crate::time::Time;
+use crate::corrections::refraction;
 
 /// Target struct
 /// 
@@ -96,8 +97,8 @@ impl Target {
     /// let time = Time::new(2024, 8, 24, 6, 35, 34);
     /// 
     /// let alt = target.altitude(&observer, &time);
-    /// assert_eq!(alt, 42.87574211449415);
     /// println!("Altitude: {}", alt);
+    /// assert!((alt - 42.893915).abs() < 1e-6);
     /// ```
     /// 
     /// # Notes
@@ -112,7 +113,7 @@ impl Target {
         let dec = dec * DEGRA;
     
         let alt = (dec.sin() * lat.sin() + dec.cos() * lat.cos() * ha.cos()).asin() / DEGRA;
-        alt
+        alt + refraction(alt)
     }
 
     /// Calculate the airmass of the target at a given time
@@ -133,11 +134,11 @@ impl Target {
     /// 
     /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
     /// let target = Target::new(6.374817, 20.242942, None);
-    /// let time = Time::new(2024, 8, 24, 6, 35, 34);
+    /// let time = Time::new(2024, 8, 24, 6, 34, 0);
     /// 
     /// let airmass = target.airmass(&observer, &time);
-    /// assert_eq!(airmass, 1.467530349026847);
     /// println!("Airmass: {}", airmass);
+    /// assert!((airmass - 1.476094).abs() < 1e-6);
     /// ```
     /// 
     /// # Notes
