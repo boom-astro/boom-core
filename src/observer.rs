@@ -25,21 +25,21 @@ use crate::time::Time;
 /// ```
 /// use flare::{Observer, Target, Time};
 /// 
-/// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, Some("P48".to_string()));
+/// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, Some("P48"));
 /// let time = Time::new(2024, 8, 24, 6, 35, 34);
 /// let lst = observer.local_sidereal_time(&time);
 /// println!("Local sidereal time: {}", lst);
 /// assert_eq!(lst, 315.09169822871746);
 /// ```
 
-pub struct Observer {
-    pub name: Option<String>,
+pub struct Observer<'a> {
+    pub name: Option<&'a str>,
     pub lat: f64,
     pub lon: f64,
     pub elevation: f64, // not used yet, but will be used for refraction correction
 }
 
-impl Observer {
+impl <'a> Observer<'a> {
     /// Create a new Observer
     /// 
     /// # Arguments
@@ -58,11 +58,11 @@ impl Observer {
     /// ```
     /// use flare::Observer;
     /// 
-    /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, Some("P48".to_string()));
+    /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, Some("P48"));
     /// assert_eq!(observer.lat, 33.3633675);
     /// assert_eq!(observer.lon, -116.8361345);
     /// assert_eq!(observer.elevation, 1870.0);
-    /// assert_eq!(observer.name, Some("P48".to_string()));
+    /// assert_eq!(observer.name, Some("P48"));
     /// println!("{}", observer.to_string());
     /// ```
     /// 
@@ -76,7 +76,7 @@ impl Observer {
     /// assert_eq!(observer.name, None);
     /// println!("{}", observer.to_string());
     /// ```
-    pub fn new(lat: f64, lon: f64, elevation: f64, name: Option<String>) -> Observer {
+    pub fn new(lat: f64, lon: f64, elevation: f64, name: Option<&str>) -> Observer {
         Observer { name, lat, lon, elevation }
     }
 
@@ -185,7 +185,7 @@ impl Observer {
     /// ```
     /// use flare::Observer;
     /// 
-    /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, Some("P48".to_string()));
+    /// let observer = Observer::new(33.3633675, -116.8361345, 1870.0, Some("P48"));
     /// assert_eq!(observer.to_string(), "Name: P48, Lat: 33.3633675, Lon: -116.8361345, Elevation: 1870");
     /// println!("{}", observer.to_string());
     /// ```
@@ -393,7 +393,7 @@ impl Observer {
     }
 }
 
-impl std::fmt::Display for Observer {
+impl <'a> std::fmt::Display for Observer<'a> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         if let Some(name) = &self.name {
             write!(f, "Name: {}, Lat: {}, Lon: {}, Elevation: {}", name, self.lat, self.lon, self.elevation)

@@ -27,32 +27,34 @@ Here are some examples of what you can do with `flare`:
 - Handle dates in multiple standard & astronomical formats:
     
     ```rust
+    use chrono::{Utc, TimeZone};
     use flare::Time;
 
-    let time = Time::new(2021, 6, 21, 12, 0, 0);
+    fn main() {
+        let time = Time::new(2021, 6, 21, 12, 0, 0);
 
-    // You can convert a time (which is timezone-agnostic, in UTC)
-    // to a variety of formats:
-    let time_jd = time.to_jd();
-    println!("The Julian Date of the time is: {}", time_jd);
+        // You can convert a time (which is timezone-agnostic, in UTC)
+        // to a variety of formats:
+        let time_jd = time.to_jd();
+        println!("The Julian Date of the time is: {}", time_jd);
 
-    // and, you can do the exact opposite, create a `Time` object
-    // from a JD, MJD, GST, UTC, or ISO string:
-    let time_from_jd = Time::from_jd(2459376.0);
-    println!("The time from the Julian Date is: {}", time_from_jd);
+        // and, you can do the exact opposite, create a `Time` object
+        // from a JD, MJD, GST, UTC, or ISO string:
+        let time_from_jd = Time::from_jd(2459376.0);
+        println!("The time from the Julian Date is: {}", time_from_jd);
 
-    // you can also get the current time:
-    let current_time = Time::now();
+        // you can also get the current time:
+        let current_time = Time::now();
+        println!("{}", current_time);
 
-    // we rely on the fantastic `chrono` library for date-time handling
-    // so you can convert a chrono::DateTime<Utc> object to a `Time` object
-    use chrono::{DateTime, Datelike, Timelike, Utc, TimeZone};
+        // we rely on the fantastic `chrono` library for date-time handling
+        // so you can convert a chrono::DateTime<Utc> object to a `Time` object
+        let chrono_utc = Utc.with_ymd_and_hms(2020, 1, 1, 0, 0, 0).unwrap();
+        let time = Time::from_utc(chrono_utc);
 
-    let chrono_utc = Utc.with_ymd_and_hms(2020, 1, 1, 0, 0, 0).unwrap();
-    let time = Time::from_utc(utc);
-
-    // you can print a date in any of the supported formats:
-    println!("{}", time.to_string(Some("mjd")));
+        // you can print a date in any of the supported formats:
+        println!("{}", time.to_string(Some("mjd")));
+    }
     ```
 
 - Calculate the angular separation between two targets/objects in the sky:
@@ -60,12 +62,14 @@ Here are some examples of what you can do with `flare`:
     ```rust
     use flare::Target;
 
-    let target1 = Target::new(6.374817, 20.242942);
-    let target2 = Target::new(6.374817, 21.242942);
+    fn main() {
+        let target1 = Target::new(6.374817, 20.242942, Some("A"));
+        let target2 = Target::new(6.374817, 21.242942, Some("B"));
 
-    let separation = target1.separation(&target2);
+        let separation = target1.separation(&target2);
 
-    println!("The angular separation between the two targets is: {}", separation);
+        println!("The angular separation between the two targets is: {}", separation);
+    }
     ```
 
 - Given an observer on earth, find the airmass of a target (at a given time):
@@ -73,18 +77,20 @@ Here are some examples of what you can do with `flare`:
     ```rust
     use flare::{Target, Observer, Time};
 
-    let observer = Observer::new(30.0, 45.0);
-    println!("{}", observer);
+    fn main() {
+        let observer = Observer::new(30.0, 45.0, 1800.0, Some("A"));
+        println!("{}", observer);
 
-    let target = Target::new(6.374817, 20.242942);
-    println!("{}", target);
+        let target = Target::new(6.374817, 20.242942, Some("B"));
+        println!("{}", target);
 
-    let time = Time::new(2021, 6, 21, 12, 0, 0);
-    println!("{}", time);
+        let time = Time::new(2020, 12, 21, 12, 0, 0);
+        println!("{}", time);
 
-    let airmass = target.airmass(&observer, &time);
+        let airmass = target.airmass(&observer, &time);
 
-    println!("Airmass at {} is: {}", airmass);
+        println!("Airmass at {} is: {}", time, airmass);
+    }
     ```
 
 - For an observer, find the next sunrise & sunset times (after a given time):
@@ -92,51 +98,70 @@ Here are some examples of what you can do with `flare`:
     ```rust
     use flare::{Observer, Time};
 
-    let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
-    println!("{}", observer);
+    fn main() {
+        let observer = Observer::new(33.3633675, -116.8361345, 1870.0, None);
+        println!("{}", observer);
 
-    let time = Time::new(2024, 9, 10, 3, 0, 0);
-    println!("{}", time);
+        let time = Time::new(2024, 9, 10, 3, 0, 0);
+        println!("{}", time);
 
-    let (sunrise, sunset) = observer.sun_set_time(Some(&time), None);
+        let (sunrise, sunset) = observer.sun_set_time(Some(&time), None);
 
-    println!("Next sunrise: {}", sunrise);
-    println!("Next sunset: {}", sunset);
+        println!("Next sunrise: {}", sunrise);
+        println!("Next sunset: {}", sunset);
 
-    // the time is optional, in which case the current time is used
-    let (sunrise, sunset) = observer.sun_set_time(None, None);
+        // the time is optional, in which case the current time is used
+        let (sunrise, sunset) = observer.sun_set_time(None, None);
+        println!("Sunrise: {}, Sunset: {}", sunrise, sunset);
 
-    // You can also specify at what altitude the sun should be considered to have risen/set, as an angle in degrees
-    let (sunrise, sunset) = observer.sun_set_time(Some(&time), Some(0.0));
+        // You can also specify at what altitude the sun should be considered to have risen/set, as an angle in degrees
+        let (sunrise, sunset) = observer.sun_set_time(Some(&time), Some(0.0));
 
-    // Otherwise, you can get astronomical, nautical, and civil twilight times:
-    let (sunrise, sunset) = observer.twilight_astronomical(Some(&time));
-    let (sunrise, sunset) = observer.twilight_nautical(Some(&time));
-    let (sunrise, sunset) = observer.twilight_civil(Some(&time));
+        println!("Sunrise: {}, Sunset: {} (at 0.0 deg)", sunrise, sunset);
+
+        // Otherwise, you can get astronomical, nautical, and civil twilight times:
+        let (sunrise, sunset) = observer.twilight_astronomical(Some(&time));
+        println!("Sunrise: {}, Sunset: {} (astronomical)", sunrise, sunset);
+
+        let (sunrise, sunset) = observer.twilight_nautical(Some(&time));
+        println!("Sunrise: {}, Sunset: {} (nautical)", sunrise, sunset);
+
+        let (sunrise, sunset) = observer.twilight_civil(Some(&time));
+        println!("Sunrise: {}, Sunset: {} (civil)", sunrise, sunset);
+    }
     ```
 
 - Work with photometry, in mag and flux space:
 
     ```rust
-    use flare::phot::{mag_to_flux, flux_to_mag, magerr_to_fluxerr, fluxerr_to_magerr, fluxerr_to_limmag, ZP};
+    use flare::phot::{mag_to_flux, flux_to_mag, limmag_to_fluxerr, fluxerr_to_limmag, ZP};
 
-    let mag = 20.0;
-    let magerr = 0.1;
+    fn main() {
+        let mag = 20.0;
+        let magerr = 0.1;
+        let limmag = 21.0;
 
-    // mag to flux
-    let (flux, fluxerr) = mag_to_flux(mag, magerr, ZP);
+        // mag to flux
+        let (flux, fluxerr) = mag_to_flux(mag, magerr, ZP);
+        println!("flux: {}, fluxerr: {}", flux, fluxerr);
 
-    // flux to mag
-    let (mag, magerr) = flux_to_mag(flux, fluxerr, ZP);
+        // flux to mag
+        let (mag, magerr) = flux_to_mag(flux, fluxerr, ZP);
+        println!("mag: {}, mag: {}", mag, magerr);
 
-    // limiting mag to fluxerr, at 5-sigma
-    let fluxerr_from_limmag = limmag_to_fluxerr(limmag, ZP, 5.0);
+        // limiting mag to fluxerr, at 5-sigma
+        let fluxerr = limmag_to_fluxerr(limmag, ZP, 5.0);
+        println!("fluxerr (from limmag): {}", fluxerr);
 
-    // fluxerr to limiting mag at 5-sigma
-    let limmag = fluxerr_to_limmag(fluxerr, ZP, 5.0);
+        // fluxerr to limiting mag at 5-sigma
+        let limmag = fluxerr_to_limmag(fluxerr, ZP, 5.0);
+        println!("limmag (from fluxerr, at 5-sigma): {}", limmag);
 
-    // ZP = 23.9 is the default, but you can specify your own for any of the above let (flux, fluxerr) = mag_to_flux(mag, magerr, 25.0);
-    let fluxerr_from_limmag = limmag_to_fluxerr(limmag, 25.0, 5.0);
+        // ZP = 23.9, but you can specify your own zero point for any of the above,
+        // just like you can specify a different sigma value
+        let limmag = limmag_to_fluxerr(limmag, 25.0, 3.0);
+        println!("fluxerr (from limmag, 3-sigma & ZP=25.0): {}", limmag);
+    }
     ```
 
 - Use a cosmology (custom, or one of the built-in ones) to compute distances:
@@ -144,25 +169,33 @@ Here are some examples of what you can do with `flare`:
     ```rust
     use flare::Cosmo;
 
-    let z = 0.1;
+    fn main() {
+        let z = 0.1;
 
-    // you can use one of the built-in cosmologies
-    let cosmo = Cosmo::planck18();
-    let hubble_distance = cosmo.params.h0;
+        // you can use one of the built-in cosmologies
+        let cosmo = Cosmo::planck18();
 
-    let luminosity_distance = cosmo.luminosity_distance(z);
-    let distance_modulus = cosmo.dm(z);
-    let angular_diameter_distance = cosmo.angular_diameter_distance(z);
+        let luminosity_distance = cosmo.luminosity_distance(z);
+        println!("Luminosity distance: {}", luminosity_distance);
 
-    // for example, you could this to get the absolute magnitude of a target
-    let apparent_mag = 20.0;
-    let abs_mag = apparent_mag - distance_modulus;
+        let dm = cosmo.dm(z);
+        println!("Distance modulus: {}", dm);
 
-    // You can also create your own cosmology
-    let cosmology = Cosmo::new(67.66, 0.3103, 0.6897, Some("mycosmo".to_string()));
+        let angular_diameter_distance = cosmo.angular_diameter_distance(z);
+        println!("Angular diameter distance: {}", angular_diameter_distance);
 
-    let z = 0.0246;
-    let dm = cosmology.dm(z);
+        // for example, you could this to get the absolute magnitude of a target
+        let apparent_mag = 20.0;
+        let abs_mag = apparent_mag - dm;
+        println!("{} mag at z={} is {}", apparent_mag, z, abs_mag);
+
+        // You can also create your own cosmology
+        let cosmology = Cosmo::new(67.66, 0.3103, 0.6897, Some("mycosmo"));
+
+        let z = 0.0246;
+        let dm = cosmology.dm(z);
+        println!("Distance modulus at z={} (using custom cosmology {}) is {}", z, cosmology.name.unwrap(), dm);
+    }
     ```
 
 ## Contributing

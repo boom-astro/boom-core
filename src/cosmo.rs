@@ -33,16 +33,16 @@ where
 /// assert_eq!((d_a - 105.770361).abs() < 1e-6, true);
 /// println!("Angular diameter distance: {:.4} Mpc", d_a);
 /// ```
-pub struct Cosmo {
+pub struct Cosmo<'a> {
     // Constants
     pub h0: f64,
     pub omega_m: f64,
     pub omega_lambda: f64,
     pub omega_k: f64,
-    pub name: Option<String>,
+    pub name: Option<&'a str>,
 }
 
-impl Cosmo {
+impl <'a> Cosmo<'a> {
     /// Create a new cosmology
     /// 
     /// # Returns
@@ -54,10 +54,10 @@ impl Cosmo {
     /// ```
     /// use flare::cosmo::Cosmo;
     /// 
-    /// let cosmology = Cosmo::new(67.66, 0.3103, 0.6897, Some("Test".to_string()));
+    /// let cosmology = Cosmo::new(67.66, 0.3103, 0.6897, Some("Test"));
     /// assert_eq!(cosmology.h0, 67.66);
     /// ```
-    pub fn new(h0: f64, omega_m: f64, omega_lambda: f64, name: Option<String>) -> Self {
+    pub fn new(h0: f64, omega_m: f64, omega_lambda: f64, name: Option<&'a str>) -> Self {
         let omega_k = 1.0 - omega_m - omega_lambda;
         Self { h0, omega_m, omega_lambda, omega_k, name }
     }
@@ -81,7 +81,7 @@ impl Cosmo {
         let omega_m = 0.3103;
         let omega_lambda = 0.6897;
         let omega_k = 1.0 - omega_m - omega_lambda;
-        Self { h0, omega_m, omega_lambda, omega_k, name: Some("Planck18".to_string()) }
+        Self { h0, omega_m, omega_lambda, omega_k, name: Some("Planck18") }
     }
     
     /// Calculate the luminosity distance from the redshift

@@ -29,16 +29,16 @@ use crate::corrections::refraction;
 /// ```
 /// use flare::Target;
 /// 
-/// let target = Target::new(6.374817, 20.242942, Some("Vega".to_string()));
+/// let target = Target::new(6.374817, 20.242942, Some("Vega"));
 /// println!("{}", target.to_string());
 /// ```
-pub struct Target {
-    pub name: Option<String>,
+pub struct Target<'a> {
+    pub name: Option<&'a str>,
     pub ra: f64,
     pub dec: f64,
 }
 
-impl Target {
+impl <'a> Target<'a> {
     /// Create a new Target
     /// 
     /// # Arguments
@@ -56,10 +56,10 @@ impl Target {
     /// ```
     /// use flare::Target;
     /// 
-    /// let target = Target::new(6.374817, 20.242942, Some("Vega".to_string()));
+    /// let target = Target::new(6.374817, 20.242942, Some("Vega"));
     /// assert_eq!(target.ra, 6.374817);
     /// assert_eq!(target.dec, 20.242942);
-    /// assert_eq!(target.name, Some("Vega".to_string()));
+    /// assert_eq!(target.name, Some("Vega"));
     /// println!("{}", target.to_string());
     /// ```
     /// 
@@ -72,7 +72,7 @@ impl Target {
     /// assert_eq!(target.name, None);
     /// println!("{}", target.to_string());
     /// ```
-    pub fn new(ra: f64, dec: f64, name: Option<String>) -> Target {
+    pub fn new(ra: f64, dec: f64, name: Option<&str>) -> Target {
         Target { name, ra, dec }
     }
 
@@ -223,7 +223,7 @@ impl Target {
     /// ```
     /// use flare::Target;
     /// 
-    /// let target = Target::new(6.374817, 20.242942, Some("Vega".to_string()));
+    /// let target = Target::new(6.374817, 20.242942, Some("Vega"));
     /// assert_eq!(target.to_string(), "Name: Vega, RA: 6.374817, DEC: 20.242942");
     /// println!("{}", target.to_string());
     /// ```
@@ -253,7 +253,7 @@ impl Target {
     /// ```
     /// use flare::Target;
     /// 
-    /// let target = Target::new(6.374817, 20.242942, Some("Vega".to_string()));
+    /// let target = Target::new(6.374817, 20.242942, Some("Vega"));
     /// let (hms, dms) = target.radec2hmsdms();
     /// assert_eq!(hms, "00:25:29.9561");
     /// assert_eq!(dms, "20:14:34.591");
@@ -274,7 +274,7 @@ impl Target {
     /// ```
     /// use flare::Target;
     /// 
-    /// let target = Target::new(6.374817, 20.242942, Some("Vega".to_string()));
+    /// let target = Target::new(6.374817, 20.242942, Some("Vega"));
     /// let (l, b) = target.radec2lb();
     /// assert_eq!((l - 114.706509).abs() < 1e-6, true);
     /// assert_eq!((b + 42.214159).abs() < 1e-6, true);
@@ -286,7 +286,7 @@ impl Target {
 
 }
 
-impl std::fmt::Display for Target {
+impl <'a> std::fmt::Display for Target<'a> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         if let Some(name) = &self.name {
             write!(f, "Name: {}, RA: {}, DEC: {}", name, self.ra, self.dec)
